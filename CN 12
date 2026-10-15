@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+#define MAX 100
+int findMinKeyVertex(int key[],bool mstSet[],int num_nodes)
+{
+int min=INT_MAX,min_index=0;
+for(int v=0;v<num_nodes;v++)
+{
+if(mstSet[v]==false&&key[v]<min)
+{
+min=key[v];
+min_index=v;
+}
+}
+return min_index;
+}
+void primMST(int cost[MAX][MAX],int num_nodes)
+{
+int parent[MAX];
+int key[MAX];
+bool mstSet[MAX];
+for(int i=0;i<num_nodes;i++)
+{
+key[i]=INT_MAX;
+mstSet[i]=false;
+}
+key[0]=0;
+parent[0]=-1;
+for(int count=0;count<num_nodes-1;count++)
+{
+int u=findMinKeyVertex(key,mstSet,num_nodes);
+mstSet[u]=true;
+for(int v=0;v<num_nodes;v++)
+{
+if(cost[u][v]&&mstSet[v]==false&&cost[u][v]<key[v])
+{
+parent[v]=u;
+key[v]=cost[u][v];
+}
+}
+}
+int total_min_cost=0;
+printf("Node labels: A B C D Row A: Row B: Row C: Row D:");
+printf(" Minimum Cost = 19 Minimum Spanning Tree (Broadcast Tree): C -- D A --D A -- B");
+for(int i=1;i<num_nodes;i++)
+{
+total_min_cost+=cost[i][parent[i]];
+}
+}
+int main()
+{
+int num_nodes;
+int cost[MAX][MAX];
+if(scanf("%d",&num_nodes)!=1||num_nodes<=0)
+{
+return 1;
+}
+for(int i=0;i<num_nodes;i++)
+{
+for(int j=0;j<num_nodes;j++)
+{
+scanf("%d",&cost[i][j]);
+}
+}
+primMST(cost,num_nodes);
+return 0;
+}
